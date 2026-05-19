@@ -8,6 +8,7 @@
     <div>
         <label for="slug" class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Slug</label>
         <input id="slug" name="slug" type="text" value="{{ old('slug', $project->slug ?? '') }}" class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm focus:border-[var(--color-accent)] focus:outline-none">
+        <p class="admin-muted mt-2">Leave blank to auto-create from project title.</p>
     </div>
 
     <div>
@@ -41,16 +42,19 @@
 <div class="mt-4">
     <label for="cover_image" class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Cover Image URL</label>
     <input id="cover_image" name="cover_image" type="url" value="{{ old('cover_image', $project->cover_image ?? '') }}" required class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm focus:border-[var(--color-accent)] focus:outline-none">
+    <p class="admin-muted mt-2">This image appears in cards and can influence click-through rate.</p>
 </div>
 
 <div class="mt-4">
     <label for="gallery_images" class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Gallery Image URLs (one per line)</label>
     <textarea id="gallery_images" name="gallery_images" rows="4" class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm focus:border-[var(--color-accent)] focus:outline-none">{{ old('gallery_images', isset($project) && $project->gallery_images ? implode(PHP_EOL, (array) $project->gallery_images) : '') }}</textarea>
+    <p class="admin-muted mt-2">Use multiple high-resolution images to communicate design depth.</p>
 </div>
 
 <div class="mt-4">
     <label for="summary" class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Summary</label>
     <textarea id="summary" name="summary" rows="3" required class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm focus:border-[var(--color-accent)] focus:outline-none">{{ old('summary', $project->summary ?? '') }}</textarea>
+    <p class="admin-muted mt-2">Keep it under 2 lines worth of copy for clean cards.</p>
 </div>
 
 <div class="mt-4">
@@ -72,6 +76,6 @@
 </div>
 
 <div class="mt-6 flex gap-3">
-    <button type="submit" class="rounded-full bg-slate-900 px-5 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-white hover:bg-slate-800">Save</button>
-    <a href="{{ route('admin.projects.index') }}" class="rounded-full border border-slate-300 px-5 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-slate-700 hover:bg-slate-100">Cancel</a>
+    <button type="submit" class="admin-btn-primary">Save</button>
+    <a href="{{ route('admin.projects.index') }}" class="admin-btn-secondary">Cancel</a>
 </div>

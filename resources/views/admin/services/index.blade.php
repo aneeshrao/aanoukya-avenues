@@ -1,11 +1,23 @@
 @extends('layouts.admin', ['heading' => 'Services'])
 
+@section('page_help')
+    @include('admin.partials.help-panel', [
+        'title' => 'Services section help',
+        'text' => 'Services appear on both homepage preview cards and the dedicated services page. Keep names short and benefit-focused.',
+        'tips' => [
+            'Display order controls card sequence on the website.',
+            'Inactive services are hidden from public pages.',
+            'Use clear icon labels to match the design language.',
+        ],
+    ])
+@endsection
+
 @section('content')
     <div class="mb-4 flex justify-end">
-        <a href="{{ route('admin.services.create') }}" class="rounded-full bg-slate-900 px-5 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-white hover:bg-slate-800">Add Service</a>
+        <a href="{{ route('admin.services.create') }}" class="admin-btn-primary">Add Service</a>
     </div>
 
-    <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+    <div class="admin-surface overflow-x-auto">
         <table class="min-w-full text-sm">
             <thead class="bg-slate-50 text-left text-xs uppercase tracking-[0.12em] text-slate-500">
                 <tr>
@@ -28,12 +40,12 @@
                             </span>
                         </td>
                         <td class="px-5 py-4">
-                            <div class="flex items-center gap-2">
-                                <a href="{{ route('admin.services.edit', $service) }}" class="text-slate-700 hover:text-slate-900">Edit</a>
+                            <div class="flex items-center gap-3">
+                                <a href="{{ route('admin.services.edit', $service) }}" class="text-sm font-semibold text-slate-700 hover:text-slate-900">Edit</a>
                                 <form action="{{ route('admin.services.destroy', $service) }}" method="POST" onsubmit="return confirm('Delete this service?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-rose-600 hover:text-rose-700">Delete</button>
+                                    <button type="submit" class="text-sm font-semibold text-rose-600 hover:text-rose-700">Delete</button>
                                 </form>
                             </div>
                         </td>

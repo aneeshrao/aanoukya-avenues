@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\SiteContentController as AdminSiteContentControll
 use App\Http\Controllers\Admin\ServiceController as AdminServiceController;
 use App\Http\Controllers\Admin\TeamMemberController as AdminTeamMemberController;
 use App\Http\Controllers\Admin\TestimonialController as AdminTestimonialController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProjectController;
@@ -40,6 +41,7 @@ Route::prefix('admin')->name('admin.')->group(function (): void {
         Route::resource('projects', AdminProjectController::class)->except('show');
         Route::resource('team-members', AdminTeamMemberController::class)->except('show');
         Route::resource('testimonials', AdminTestimonialController::class)->except('show');
+        Route::resource('users', AdminUserController::class)->except('show');
         Route::get('/site-content', [AdminSiteContentController::class, 'edit'])->name('site-content.edit');
         Route::put('/site-content', [AdminSiteContentController::class, 'update'])->name('site-content.update');
 

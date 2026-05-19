@@ -1,7 +1,19 @@
 @extends('layouts.admin', ['heading' => 'Contact Inbox'])
 
+@section('page_help')
+    @include('admin.partials.help-panel', [
+        'title' => 'Inbox workflow help',
+        'text' => 'Review inquiries daily and mark each lead as replied once your team has responded.',
+        'tips' => [
+            'Prioritize messages with detailed project context.',
+            'Use Project Type to route leads to the right team member.',
+            'Mark replied only after email, call, or WhatsApp follow-up is complete.',
+        ],
+    ])
+@endsection
+
 @section('content')
-    <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+    <div class="admin-surface overflow-x-auto">
         <table class="min-w-full text-sm">
             <thead class="bg-slate-50 text-left text-xs uppercase tracking-[0.12em] text-slate-500">
                 <tr>

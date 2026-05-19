@@ -13,6 +13,7 @@
     <div>
         <label for="photo" class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Photo URL or Path</label>
         <input id="photo" name="photo" type="text" value="{{ old('photo', $teamMember->photo ?? '') }}" placeholder="https://... or /images/member.avif" class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm focus:border-[var(--color-accent)] focus:outline-none">
+        <p class="admin-muted mt-2">Use approved team images with similar crop and lighting.</p>
     </div>
     <div>
         <label for="experience_label" class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Experience Label</label>
@@ -28,6 +29,7 @@
 <div class="mt-4">
     <label for="bio" class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Bio (Optional)</label>
     <textarea id="bio" name="bio" rows="6" class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm focus:border-[var(--color-accent)] focus:outline-none">{{ old('bio', $teamMember->bio ?? '') }}</textarea>
+    <p class="admin-muted mt-2">Best practice: 2 to 4 concise lines focused on expertise and approach.</p>
 </div>
 
 <div class="mt-4">
@@ -39,6 +41,6 @@
 </div>
 
 <div class="mt-6 flex gap-3">
-    <button type="submit" class="rounded-full bg-slate-900 px-5 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-white hover:bg-slate-800">Save</button>
-    <a href="{{ route('admin.team-members.index') }}" class="rounded-full border border-slate-300 px-5 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-slate-700 hover:bg-slate-100">Cancel</a>
+    <button type="submit" class="admin-btn-primary">Save</button>
+    <a href="{{ route('admin.team-members.index') }}" class="admin-btn-secondary">Cancel</a>
 </div>

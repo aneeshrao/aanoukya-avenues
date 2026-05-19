@@ -1,4 +1,4 @@
-<header class="sticky top-0 z-40 border-b border-white/10 bg-[var(--color-cloud)]/80 backdrop-blur-xl">
+<header class="sticky top-0 z-40 border-b border-white/10 bg-[var(--color-cloud)]/85 backdrop-blur-xl">
     <div class="site-shell flex h-20 items-center justify-between">
         <a href="{{ route('home') }}" class="inline-flex items-center">
             <img src="{{ asset('images/logo.avif') }}" alt="{{ $siteContent['header']['logo_alt'] ?? 'Aanoukya Avenues logo' }}" class="h-12 w-auto object-contain md:h-14">
@@ -23,7 +23,7 @@
         </nav>
     </div>
 
-    <nav class="hidden border-t border-white/10 bg-[#0a1019]/95 md:hidden" data-mobile-menu>
+    <nav class="hidden border-t border-white/10 bg-[#0f141d]/95 md:hidden" data-mobile-menu>
         <div class="site-shell grid gap-4 py-5">
             <a href="{{ route('home') }}" class="site-nav-link">{{ $siteContent['header']['nav_home'] ?? 'Home' }}</a>
             <a href="{{ route('about') }}" class="site-nav-link">{{ $siteContent['header']['nav_about'] ?? 'About' }}</a>

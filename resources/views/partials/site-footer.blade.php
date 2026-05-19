@@ -1,4 +1,4 @@
-<footer class="mt-24 border-t border-white/10 bg-[#080d15]/80">
+<footer class="mt-24 border-t border-white/10 bg-[#0a0f18]/85">
     <div class="site-shell grid gap-12 py-12 md:grid-cols-3">
         <div>
             <a href="{{ route('home') }}" class="inline-flex items-center">

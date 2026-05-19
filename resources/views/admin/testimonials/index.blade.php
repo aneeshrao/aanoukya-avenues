@@ -1,11 +1,23 @@
 @extends('layouts.admin', ['heading' => 'Testimonials'])
 
+@section('page_help')
+    @include('admin.partials.help-panel', [
+        'title' => 'Testimonials section help',
+        'text' => 'Testimonials reinforce credibility. Keep quotes authentic and rotate only your strongest client feedback.',
+        'tips' => [
+            'Ratings should be between 1 and 5.',
+            'Use display order to prioritize premium project feedback first.',
+            'Inactive testimonials remain saved but hidden on the site.',
+        ],
+    ])
+@endsection
+
 @section('content')
     <div class="mb-4 flex justify-end">
-        <a href="{{ route('admin.testimonials.create') }}" class="rounded-full bg-slate-900 px-5 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-white hover:bg-slate-800">Add Testimonial</a>
+        <a href="{{ route('admin.testimonials.create') }}" class="admin-btn-primary">Add Testimonial</a>
     </div>
 
-    <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+    <div class="admin-surface overflow-x-auto">
         <table class="min-w-full text-sm">
             <thead class="bg-slate-50 text-left text-xs uppercase tracking-[0.12em] text-slate-500">
                 <tr>
@@ -31,12 +43,12 @@
                             </span>
                         </td>
                         <td class="px-5 py-4">
-                            <div class="flex items-center gap-2">
-                                <a href="{{ route('admin.testimonials.edit', $testimonial) }}" class="text-slate-700 hover:text-slate-900">Edit</a>
+                            <div class="flex items-center gap-3">
+                                <a href="{{ route('admin.testimonials.edit', $testimonial) }}" class="text-sm font-semibold text-slate-700 hover:text-slate-900">Edit</a>
                                 <form action="{{ route('admin.testimonials.destroy', $testimonial) }}" method="POST" onsubmit="return confirm('Delete this testimonial?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-rose-600 hover:text-rose-700">Delete</button>
+                                    <button type="submit" class="text-sm font-semibold text-rose-600 hover:text-rose-700">Delete</button>
                                 </form>
                             </div>
                         </td>

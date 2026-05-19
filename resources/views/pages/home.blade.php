@@ -9,15 +9,67 @@
         $stats = $home['stats'] ?? [];
         $servicesCta = trim(str_replace(['->', '<-'], '', $home['services_cta'] ?? 'Explore all services'));
         $featuredCta = trim(str_replace(['->', '<-'], '', $home['featured_cta'] ?? 'See full portfolio'));
+
+        $heroSlides = [];
+
+        foreach ($featuredProjects as $project) {
+            if (empty($project->cover_image)) {
+                continue;
+            }
+
+            $heroSlides[] = [
+                'image' => $project->cover_image,
+                'title' => $project->title,
+            ];
+
+            if (count($heroSlides) === 4) {
+                break;
+            }
+        }
+
+        foreach ($galleryImages as $image) {
+            if (count($heroSlides) === 4) {
+                break;
+            }
+
+            $heroSlides[] = [
+                'image' => $image,
+                'title' => 'Design and Build Showcase',
+            ];
+        }
     @endphp
 
-    <section class="site-shell relative overflow-hidden pt-12 md:pt-16">
-        <div class="pointer-events-none absolute inset-0 blueprint-grid opacity-45"></div>
-        <div class="spotlight one -left-24 top-8"></div>
-        <div class="spotlight two right-0 top-28"></div>
+    <div class="site-loader" data-site-loader>
+        <div class="site-loader-curtain site-loader-curtain-left" aria-hidden="true"></div>
+        <div class="site-loader-curtain site-loader-curtain-right" aria-hidden="true"></div>
+        <div class="site-loader-core">
+            <img src="{{ asset('images/logo.avif') }}" alt="{{ $siteContent['header']['logo_alt'] ?? 'Aanoukya Avenues logo' }}" class="site-loader-logo">
+            <div class="site-loader-track" aria-hidden="true">
+                <span class="site-loader-bar"></span>
+            </div>
+        </div>
+    </div>
 
-        <div class="grid gap-12 lg:grid-cols-[1fr_0.95fr] lg:items-center">
-            <div class="relative z-10" data-reveal>
+    <section class="hero-immersive relative overflow-hidden">
+        <div class="hero-reel hero-reel-full" data-hero-reel>
+            @forelse($heroSlides as $slide)
+                <article class="hero-reel-slide {{ $loop->first ? 'is-active' : '' }}" data-hero-slide>
+                    <img src="{{ $slide['image'] }}" alt="{{ $slide['title'] }}" class="hero-image-base">
+                    <img src="{{ $slide['image'] }}" alt="" class="hero-image-spotlight" aria-hidden="true">
+                    <div class="hero-reel-shade" aria-hidden="true"></div>
+                </article>
+            @empty
+                <article class="hero-reel-slide is-active" data-hero-slide>
+                    <div class="hero-fallback-canvas"></div>
+                    <div class="hero-reel-shade" aria-hidden="true"></div>
+                </article>
+            @endforelse
+
+            <div class="hero-spotlight-cursor" aria-hidden="true"></div>
+        </div>
+
+        <div class="site-shell relative z-10 flex min-h-[92svh] items-end py-20 md:min-h-[96svh] md:py-28">
+            <div class="max-w-3xl pb-6 md:pb-10" data-reveal>
                 <span class="hero-kicker">{{ $home['hero_kicker'] ?? 'Aanoukya Avenues' }}</span>
 
                 <h1 class="section-title mt-6 max-w-3xl text-5xl leading-[1.02] md:text-6xl">
@@ -35,28 +87,6 @@
                 <div class="mt-8 flex flex-wrap gap-4">
                     <a href="{{ route('contact.index') }}" class="btn-primary">{{ $home['hero_primary_cta'] ?? 'Get Started Now' }}</a>
                     <a href="{{ route('projects.index') }}" class="btn-secondary inline-flex items-center gap-2">{{ $home['hero_secondary_cta'] ?? 'Scroll down to see projects' }} <i class="fa-solid fa-arrow-down text-xs" aria-hidden="true"></i></a>
-                </div>
-            </div>
-
-            <div class="hero-stage h-[520px]" data-reveal>
-                <div class="scanline"></div>
-
-                <svg class="wireframe-svg" viewBox="0 0 800 520" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <path class="wireframe-path" d="M72 428 L310 302 L618 382 L410 492 Z" />
-                    <path class="wireframe-path delay-1" d="M172 222 L418 96 L702 184 L454 304 Z" />
-                    <path class="wireframe-path delay-2" d="M310 302 L310 144 L454 64 L454 304" />
-                    <path class="wireframe-path delay-3" d="M618 382 L618 232 L454 304" />
-                    <path class="wireframe-path delay-4" d="M72 428 L172 222 L418 96" />
-                    <path class="wireframe-path delay-2" d="M172 222 L310 302 L310 144" />
-                    <path class="wireframe-path delay-1" d="M454 64 L454 304 L702 184" />
-                </svg>
-
-                <div class="floating-note" style="top: 10%; left: 9%;">Facade axis</div>
-                <div class="floating-note note-2" style="bottom: 21%; right: 10%;">Volume study</div>
-                <div class="floating-note note-3" style="bottom: 11%; left: 40%;">Material node</div>
-
-                <div class="orbit-ring" style="top: 18%; right: 12%;">
-                    <span class="orbit-dot"></span>
                 </div>
             </div>
         </div>

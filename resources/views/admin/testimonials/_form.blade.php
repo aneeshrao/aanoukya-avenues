@@ -17,6 +17,7 @@
     <div>
         <label for="rating" class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Rating (1-5)</label>
         <input id="rating" name="rating" type="number" min="1" max="5" value="{{ old('rating', $testimonial->rating ?? 5) }}" required class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm focus:border-[var(--color-accent)] focus:outline-none">
+        <p class="admin-muted mt-2">Only whole-number ratings are supported.</p>
     </div>
 
     <div>
@@ -28,6 +29,7 @@
 <div class="mt-4">
     <label for="quote" class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Quote</label>
     <textarea id="quote" name="quote" rows="6" required class="mt-2 w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm focus:border-[var(--color-accent)] focus:outline-none">{{ old('quote', $testimonial->quote ?? '') }}</textarea>
+    <p class="admin-muted mt-2">Aim for one clear thought that communicates trust or outcome.</p>
 </div>
 
 <div class="mt-4">
@@ -39,6 +41,6 @@
 </div>
 
 <div class="mt-6 flex gap-3">
-    <button type="submit" class="rounded-full bg-slate-900 px-5 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-white hover:bg-slate-800">Save</button>
-    <a href="{{ route('admin.testimonials.index') }}" class="rounded-full border border-slate-300 px-5 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-slate-700 hover:bg-slate-100">Cancel</a>
+    <button type="submit" class="admin-btn-primary">Save</button>
+    <a href="{{ route('admin.testimonials.index') }}" class="admin-btn-secondary">Cancel</a>
 </div>

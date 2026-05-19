@@ -1,5 +1,17 @@
 @extends('layouts.admin', ['heading' => 'Site Content'])
 
+@section('page_help')
+    @include('admin.partials.help-panel', [
+        'title' => 'Site content guide',
+        'text' => 'This screen controls reusable copy and labels across multiple pages. Edit carefully and save once all related text is updated.',
+        'tips' => [
+            'Keep approved brand tone consistent across every section.',
+            'Use short, clear labels for navigation and CTA text.',
+            'For major copy rewrites, review corresponding public pages after saving.',
+        ],
+    ])
+@endsection
+
 @section('content')
     @php
         $home = $content['home'] ?? [];
@@ -29,8 +41,9 @@
         @csrf
         @method('PUT')
 
-        <section class="rounded-2xl border border-slate-200 bg-white p-6">
+        <section class="admin-surface p-6">
             <h2 class="text-lg font-semibold text-slate-900">Meta + Header</h2>
+            <p class="admin-muted mt-1">Controls SEO metadata and all main navigation labels.</p>
             <div class="mt-4 grid gap-4 md:grid-cols-2">
                 <div>
                     <label class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Meta Title</label>
@@ -69,8 +82,9 @@
             </div>
         </section>
 
-        <section class="rounded-2xl border border-slate-200 bg-white p-6">
+        <section class="admin-surface p-6">
             <h2 class="text-lg font-semibold text-slate-900">Home Page Copy</h2>
+            <p class="admin-muted mt-1">Primary messaging shown in the hero and top sections of the homepage.</p>
             <div class="mt-4 grid gap-4 md:grid-cols-2">
                 <div>
                     <label class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Hero Kicker</label>
@@ -124,8 +138,9 @@
 
         </section>
 
-        <section class="rounded-2xl border border-slate-200 bg-white p-6">
+        <section class="admin-surface p-6">
             <h2 class="text-lg font-semibold text-slate-900">Home Images + Highlights</h2>
+            <p class="admin-muted mt-1">Image references, homepage section tags, and numeric highlight content.</p>
 
             <h3 class="mt-4 text-sm font-semibold uppercase tracking-[0.14em] text-slate-500">Loop Gallery Images</h3>
             <div class="mt-3 grid gap-3 md:grid-cols-2">
@@ -181,8 +196,9 @@
             </div>
         </section>
 
-        <section class="rounded-2xl border border-slate-200 bg-white p-6">
+        <section class="admin-surface p-6">
             <h2 class="text-lg font-semibold text-slate-900">Home Testimonials + Final CTA</h2>
+            <p class="admin-muted mt-1">Client proof section and final conversion message shown near homepage footer.</p>
             <div class="mt-4 grid gap-4 md:grid-cols-2">
                 <div>
                     <label class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-500">Testimonials Tag</label>
@@ -218,8 +234,9 @@
             </div>
         </section>
 
-        <section class="rounded-2xl border border-slate-200 bg-white p-6">
+        <section class="admin-surface p-6">
             <h2 class="text-lg font-semibold text-slate-900">About + Services + Projects + Contact Pages</h2>
+            <p class="admin-muted mt-1">Global labels and copy snippets reused in inner pages.</p>
 
             <h3 class="mt-4 text-sm font-semibold uppercase tracking-[0.14em] text-slate-500">About Page</h3>
             <div class="mt-3 grid gap-4 md:grid-cols-2">
@@ -282,8 +299,9 @@
             </div>
         </section>
 
-        <section class="rounded-2xl border border-slate-200 bg-white p-6">
+        <section class="admin-surface p-6">
             <h2 class="text-lg font-semibold text-slate-900">Footer</h2>
+            <p class="admin-muted mt-1">Footer headings, studio info, and social links used site-wide.</p>
             <div class="mt-4 grid gap-3 md:grid-cols-2">
                 <input type="text" name="content[footer][quick_links_title]" value="{{ old('content.footer.quick_links_title', $footer['quick_links_title'] ?? '') }}" class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm" placeholder="Quick links heading">
                 <input type="text" name="content[footer][studio_title]" value="{{ old('content.footer.studio_title', $footer['studio_title'] ?? '') }}" class="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm" placeholder="Studio heading">
@@ -311,7 +329,7 @@
         </section>
 
         <div class="flex justify-end">
-            <button type="submit" class="rounded-full bg-slate-900 px-6 py-3 text-xs font-semibold uppercase tracking-[0.12em] text-white hover:bg-slate-800">
+            <button type="submit" class="admin-btn-primary">
                 Save Site Content
             </button>
         </div>
