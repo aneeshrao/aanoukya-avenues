@@ -1,5 +1,23 @@
 <?php
 
+$appUrl = trim((string) env('APP_URL', ''));
+
+if ($appUrl === '') {
+    $railwayDomain = trim((string) env('RAILWAY_PUBLIC_DOMAIN', ''));
+    $appUrl = $railwayDomain !== '' ? 'https://'.$railwayDomain : 'http://localhost';
+} elseif (! str_contains($appUrl, '://')) {
+    $appUrl = 'https://'.$appUrl;
+}
+
+$appHost = parse_url($appUrl, PHP_URL_HOST);
+
+if (! is_string($appHost) || $appHost === '') {
+    $railwayDomain = trim((string) env('RAILWAY_PUBLIC_DOMAIN', ''));
+    $appUrl = $railwayDomain !== '' ? 'https://'.$railwayDomain : 'http://localhost';
+}
+
+$appUrl = rtrim($appUrl, '/');
+
 return [
 
     /*
@@ -52,7 +70,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => $appUrl,
 
     /*
     |--------------------------------------------------------------------------
