@@ -1,9 +1,17 @@
 <?php
 
-$appUrl = trim((string) env('APP_URL', ''));
+$normalizeEnvString = static function (mixed $value): string {
+    if (! is_string($value)) {
+        return '';
+    }
+
+    return trim($value, " \t\n\r\0\x0B\"'");
+};
+
+$appUrl = $normalizeEnvString(env('APP_URL', ''));
 
 if ($appUrl === '') {
-    $railwayDomain = trim((string) env('RAILWAY_PUBLIC_DOMAIN', ''));
+    $railwayDomain = $normalizeEnvString(env('RAILWAY_PUBLIC_DOMAIN', ''));
     $appUrl = $railwayDomain !== '' ? 'https://'.$railwayDomain : 'http://localhost';
 } elseif (! str_contains($appUrl, '://')) {
     $appUrl = 'https://'.$appUrl;
@@ -23,7 +31,7 @@ $isValidHost = static function (?string $host): bool {
 };
 
 if (! $isValidHost($appHost)) {
-    $railwayDomain = trim((string) env('RAILWAY_PUBLIC_DOMAIN', ''));
+    $railwayDomain = $normalizeEnvString(env('RAILWAY_PUBLIC_DOMAIN', ''));
 
     if ($isValidHost($railwayDomain)) {
         $appUrl = 'https://'.$railwayDomain;
@@ -33,6 +41,18 @@ if (! $isValidHost($appHost)) {
 }
 
 $appUrl = rtrim($appUrl, '/');
+$appKey = $normalizeEnvString(env('APP_KEY', ''));
+$debugValue = env('APP_DEBUG', false);
+
+if (is_string($debugValue)) {
+    $debugValue = $normalizeEnvString($debugValue);
+}
+
+$appDebug = filter_var($debugValue, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
+
+if ($appDebug === null) {
+    $appDebug = false;
+}
 
 return [
 
@@ -73,7 +93,7 @@ return [
     |
     */
 
-    'debug' => (bool) env('APP_DEBUG', false),
+    'debug' => $appDebug,
 
     /*
     |--------------------------------------------------------------------------
@@ -131,7 +151,7 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
-    'key' => env('APP_KEY'),
+    'key' => $appKey,
 
     'previous_keys' => [
         ...array_filter(

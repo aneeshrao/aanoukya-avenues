@@ -2,6 +2,20 @@
 
 use Illuminate\Support\Str;
 
+$normalizeEnvString = static function (mixed $value): string {
+    if (! is_string($value)) {
+        return '';
+    }
+
+    return trim($value, " \t\n\r\0\x0B\"'");
+};
+
+$sessionDomain = $normalizeEnvString(env('SESSION_DOMAIN', ''));
+
+if ($sessionDomain === '' || strtolower($sessionDomain) === 'null') {
+    $sessionDomain = null;
+}
+
 return [
 
     /*
@@ -156,7 +170,7 @@ return [
     |
     */
 
-    'domain' => env('SESSION_DOMAIN'),
+    'domain' => $sessionDomain,
 
     /*
     |--------------------------------------------------------------------------
