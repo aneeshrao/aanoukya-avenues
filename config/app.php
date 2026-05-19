@@ -10,10 +10,26 @@ if ($appUrl === '') {
 }
 
 $appHost = parse_url($appUrl, PHP_URL_HOST);
+$isValidHost = static function (?string $host): bool {
+    if (! is_string($host) || $host === '') {
+        return false;
+    }
 
-if (! is_string($appHost) || $appHost === '') {
+    if ($host === 'localhost' || filter_var($host, FILTER_VALIDATE_IP)) {
+        return true;
+    }
+
+    return (bool) filter_var($host, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME);
+};
+
+if (! $isValidHost($appHost)) {
     $railwayDomain = trim((string) env('RAILWAY_PUBLIC_DOMAIN', ''));
-    $appUrl = $railwayDomain !== '' ? 'https://'.$railwayDomain : 'http://localhost';
+
+    if ($isValidHost($railwayDomain)) {
+        $appUrl = 'https://'.$railwayDomain;
+    } else {
+        $appUrl = 'http://localhost';
+    }
 }
 
 $appUrl = rtrim($appUrl, '/');
