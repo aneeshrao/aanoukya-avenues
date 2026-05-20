@@ -9,8 +9,7 @@
         $stats = $home['stats'] ?? [];
         $servicesCta = trim(str_replace(['->', '<-'], '', $home['services_cta'] ?? 'Explore all services'));
         $featuredCta = trim(str_replace(['->', '<-'], '', $home['featured_cta'] ?? 'See full portfolio'));
-        $heroVideoFile = 'videos/91744-636709154.mp4';
-        $heroVideoUrl = file_exists(public_path($heroVideoFile)) ? asset($heroVideoFile) : null;
+        $heroVideoUrl = trim((string) ($home['hero_video_url'] ?? env('HERO_VIDEO_URL', 'https://res.cloudinary.com/dnwxzbter/video/upload/q_auto/f_auto/v1779279806/91744-636709154_jqx1jy.mp4')));
 
         $heroSlides = [];
 
