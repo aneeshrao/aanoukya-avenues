@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\ContactSubmission;
 use App\Models\SiteContent;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
@@ -14,7 +15,7 @@ class ContactController extends Controller
         return view('pages.contact');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -28,6 +29,13 @@ class ContactController extends Controller
 
         $content = SiteContent::mergedContent();
         $message = $content['contact_page']['success_message'] ?? 'Thanks for reaching out. Our team will contact you shortly.';
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'status' => 'ok',
+                'message' => $message,
+            ]);
+        }
 
         return back()->with('status', $message);
     }

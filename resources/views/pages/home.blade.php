@@ -9,6 +9,8 @@
         $stats = $home['stats'] ?? [];
         $servicesCta = trim(str_replace(['->', '<-'], '', $home['services_cta'] ?? 'Explore all services'));
         $featuredCta = trim(str_replace(['->', '<-'], '', $home['featured_cta'] ?? 'See full portfolio'));
+        $heroVideoFile = 'videos/91744-636709154.mp4';
+        $heroVideoUrl = file_exists(public_path($heroVideoFile)) ? asset($heroVideoFile) : null;
 
         $heroSlides = [];
 
@@ -52,27 +54,36 @@
 
     <section class="hero-immersive relative overflow-hidden">
         <div class="hero-reel hero-reel-full" data-hero-reel>
-            @forelse($heroSlides as $slide)
-                <article class="hero-reel-slide {{ $loop->first ? 'is-active' : '' }}" data-hero-slide>
-                    <img src="{{ $slide['image'] }}" alt="{{ $slide['title'] }}" class="hero-image-base">
-                    <img src="{{ $slide['image'] }}" alt="" class="hero-image-spotlight" aria-hidden="true">
+            @if($heroVideoUrl)
+                <article class="hero-reel-slide hero-reel-slide-video is-active" data-hero-slide>
+                    <video class="hero-video-base" autoplay muted loop playsinline preload="metadata">
+                        <source src="{{ $heroVideoUrl }}" type="video/mp4">
+                    </video>
                     <div class="hero-reel-shade" aria-hidden="true"></div>
                 </article>
-            @empty
+            @elseif(! empty($heroSlides))
+                @foreach($heroSlides as $slide)
+                    <article class="hero-reel-slide {{ $loop->first ? 'is-active' : '' }}" data-hero-slide>
+                        <img src="{{ $slide['image'] }}" alt="{{ $slide['title'] }}" class="hero-image-base">
+                        <img src="{{ $slide['image'] }}" alt="" class="hero-image-spotlight" aria-hidden="true">
+                        <div class="hero-reel-shade" aria-hidden="true"></div>
+                    </article>
+                @endforeach
+            @else
                 <article class="hero-reel-slide is-active" data-hero-slide>
                     <div class="hero-fallback-canvas"></div>
                     <div class="hero-reel-shade" aria-hidden="true"></div>
                 </article>
-            @endforelse
+            @endif
 
             <div class="hero-spotlight-cursor" aria-hidden="true"></div>
         </div>
 
-        <div class="site-shell relative z-10 flex min-h-[92svh] items-end py-20 md:min-h-[96svh] md:py-28">
+        <div class="site-shell relative z-10 flex min-h-[80svh] items-end py-14 md:min-h-[88svh] md:py-24">
             <div class="max-w-3xl pb-6 md:pb-10" data-reveal>
                 <span class="hero-kicker">{{ $home['hero_kicker'] ?? 'Aanoukya Avenues' }}</span>
 
-                <h1 class="section-title mt-6 max-w-3xl text-5xl leading-[1.02] md:text-6xl">
+                <h1 class="section-title mt-6 max-w-3xl text-4xl leading-[1.08] md:text-5xl lg:text-6xl">
                     <span class="headline-reveal"><span>{{ $home['hero_title_line_1'] ?? "We're the Twist your Plot needs." }}</span></span>
                     <br>
                     <span class="headline-reveal delay"><span class="headline-gradient">{{ $home['hero_title_line_2'] ?? "Bengaluru's End-to-End" }}</span></span>

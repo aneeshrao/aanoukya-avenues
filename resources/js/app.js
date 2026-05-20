@@ -147,7 +147,206 @@ function initHeroSpotlight() {
     };
 }
 
+function initPageTransitions() {
+    const body = document.body;
+
+    if (!body.classList.contains('page-transition-body')) {
+        return () => {};
+    }
+
+    body.classList.add('is-page-ready');
+
+    if ('startViewTransition' in document) {
+        return () => {};
+    }
+
+    const isInternalLink = (link) => {
+        if (!link.href || link.target === '_blank' || link.hasAttribute('download')) {
+            return false;
+        }
+
+        if (link.getAttribute('href')?.startsWith('#')) {
+            return false;
+        }
+
+        try {
+            const url = new URL(link.href, window.location.href);
+            return url.origin === window.location.origin && url.href !== window.location.href;
+        } catch {
+            return false;
+        }
+    };
+
+    const clickHandler = (event) => {
+        if (
+            event.defaultPrevented ||
+            event.button !== 0 ||
+            event.metaKey ||
+            event.ctrlKey ||
+            event.shiftKey ||
+            event.altKey
+        ) {
+            return;
+        }
+
+        if (!(event.target instanceof Element)) {
+            return;
+        }
+
+        const link = event.target.closest('a[href]');
+        if (!link || !isInternalLink(link)) {
+            return;
+        }
+
+        event.preventDefault();
+        body.classList.add('is-transitioning');
+
+        window.setTimeout(() => {
+            window.location.href = link.href;
+        }, 170);
+    };
+
+    document.addEventListener('click', clickHandler);
+
+    return () => {
+        document.removeEventListener('click', clickHandler);
+    };
+}
+
+function initContactForm() {
+    const form = document.querySelector('[data-contact-form]');
+
+    if (!form) {
+        return () => {};
+    }
+
+    const submitButton = form.querySelector('[data-contact-submit]');
+    const successCard = document.querySelector('[data-contact-success]');
+    const successMessage = document.querySelector('[data-contact-success-message]');
+    const resetButton = document.querySelector('[data-contact-reset]');
+    const defaultLabel = submitButton?.getAttribute('data-default-label') || 'Send Inquiry';
+
+    const fieldErrors = Array.from(form.querySelectorAll('[data-field-error]'));
+    const fields = Array.from(form.querySelectorAll('[data-contact-input]'));
+
+    const clearErrors = () => {
+        fieldErrors.forEach((node) => {
+            node.textContent = '';
+        });
+
+        fields.forEach((field) => {
+            field.classList.remove('contact-input-error');
+            field.removeAttribute('aria-invalid');
+        });
+    };
+
+    const setFieldError = (fieldName, message) => {
+        const input = form.querySelector(`[name="${fieldName}"]`);
+        const errorNode = fieldErrors.find((node) => node.getAttribute('data-field-error') === fieldName);
+
+        if (input) {
+            input.classList.add('contact-input-error');
+            input.setAttribute('aria-invalid', 'true');
+        }
+
+        if (errorNode) {
+            errorNode.textContent = message;
+        }
+    };
+
+    const onSubmit = async (event) => {
+        event.preventDefault();
+        clearErrors();
+
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.textContent = 'Sending...';
+        }
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: {
+                    Accept: 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            });
+
+            if (response.ok) {
+                const payload = await response.json();
+                const message = payload.message || 'Thanks for reaching out. Our team will contact you shortly.';
+
+                if (successMessage) {
+                    successMessage.textContent = message;
+                }
+
+                form.reset();
+                form.classList.add('contact-form-hidden');
+
+                if (successCard) {
+                    successCard.classList.remove('hidden');
+                    window.requestAnimationFrame(() => {
+                        successCard.classList.add('is-visible');
+                    });
+                }
+
+                return;
+            }
+
+            if (response.status === 422) {
+                const payload = await response.json();
+                const errors = payload.errors || {};
+
+                Object.entries(errors).forEach(([field, messages]) => {
+                    const message = Array.isArray(messages) ? messages[0] : messages;
+                    if (typeof message === 'string') {
+                        setFieldError(field, message);
+                    }
+                });
+
+                return;
+            }
+
+            window.location.reload();
+        } catch {
+            window.location.reload();
+        } finally {
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = defaultLabel;
+            }
+        }
+    };
+
+    const onReset = () => {
+        clearErrors();
+        form.classList.remove('contact-form-hidden');
+
+        if (successCard) {
+            successCard.classList.remove('is-visible');
+            window.setTimeout(() => {
+                successCard.classList.add('hidden');
+            }, 220);
+        }
+
+        const firstField = form.querySelector('[name="name"]');
+        if (firstField instanceof HTMLElement) {
+            firstField.focus();
+        }
+    };
+
+    form.addEventListener('submit', onSubmit);
+    resetButton?.addEventListener('click', onReset);
+
+    return () => {
+        form.removeEventListener('submit', onSubmit);
+        resetButton?.removeEventListener('click', onReset);
+    };
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    const cleanupPageTransitions = initPageTransitions();
     const loader = document.querySelector('[data-site-loader]');
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -170,10 +369,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const cleanupHeroReel = initHeroReel();
     const cleanupHeroSpotlight = initHeroSpotlight();
+    const cleanupContactForm = initContactForm();
 
     window.addEventListener('pagehide', () => {
+        cleanupPageTransitions();
         cleanupHeroReel();
         cleanupHeroSpotlight();
+        cleanupContactForm();
     });
 
     const menuButton = document.querySelector('[data-menu-button]');
