@@ -50,3 +50,22 @@
         {{ date('Y') }} {{ $siteContent['footer']['copyright_suffix'] ?? 'Aanoukya Avenues. Built with precision.' }}
     </div>
 </footer>
+
+@php
+    $rawWhatsappPhone = $siteContent['footer']['whatsapp_phone'] ?? $siteContent['footer']['studio_phone'] ?? '+91 98765 43210';
+    $whatsappPhone = preg_replace('/\D+/', '', (string) $rawWhatsappPhone);
+    $whatsappMessage = rawurlencode($siteContent['footer']['whatsapp_message'] ?? 'Hi Aanoukya Avenues, I would like to discuss my project.');
+    $whatsappUrl = $whatsappPhone ? "https://wa.me/{$whatsappPhone}?text={$whatsappMessage}" : null;
+@endphp
+
+@if($whatsappUrl)
+    <a
+        href="{{ $whatsappUrl }}"
+        class="floating-whatsapp"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Chat on WhatsApp"
+    >
+        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+    </a>
+@endif

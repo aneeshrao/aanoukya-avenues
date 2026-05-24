@@ -12,6 +12,16 @@
         $phoneLink = $contactPage['phone_link'] ?? preg_replace('/\s+/', '', $phoneValue);
         $emailValue = $contactPage['email_value'] ?? ($footer['studio_email'] ?? 'hello@aanoukyaavenues.com');
         $addressValue = $contactPage['address_value'] ?? ($footer['studio_city'] ?? 'Bengaluru, Karnataka');
+        $mapQuery = trim((string) ($contactPage['map_query'] ?? $addressValue));
+        $mapEmbedUrl = trim((string) ($contactPage['map_embed_url'] ?? ''));
+
+        if ($mapEmbedUrl === '' && $mapQuery !== '') {
+            $mapEmbedUrl = 'https://www.google.com/maps?q='.urlencode($mapQuery).'&output=embed';
+        }
+
+        $mapOpenUrl = $mapQuery !== ''
+            ? 'https://www.google.com/maps/search/?api=1&query='.urlencode($mapQuery)
+            : '';
     @endphp
 
     <section class="site-shell pt-16 md:pt-20" data-reveal>
@@ -22,8 +32,13 @@
         </p>
     </section>
 
-    <section class="site-shell my-14 grid gap-6 lg:grid-cols-[1fr_0.45fr]" data-reveal>
-        <div class="panel p-8 md:p-10">
+    <section class="site-shell contact-layout my-14 grid gap-6 lg:grid-cols-[1fr_0.45fr]" data-reveal>
+        <div class="contact-ambient" aria-hidden="true">
+            <span class="contact-ambient-orb one" data-parallax="28"></span>
+            <span class="contact-ambient-orb two" data-parallax="34"></span>
+        </div>
+
+        <div class="panel contact-form-panel p-8 md:p-10">
             @if(session('status'))
                 <div class="mb-6 rounded-2xl border border-emerald-500/35 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200" role="status">
                     {{ session('status') }}
@@ -82,7 +97,7 @@
             </div>
         </div>
 
-        <aside class="panel p-8 md:p-10">
+        <aside class="panel contact-info-panel p-8 md:p-10">
             <h2 class="text-3xl">{{ $contactPage['studio_title'] ?? 'Studio Information' }}</h2>
             <div class="mt-6 space-y-5 text-sm text-slate-300">
                 <div>
@@ -103,6 +118,27 @@
                     <p class="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">{{ $contactPage['address_label'] ?? 'Address' }}</p>
                     <p class="mt-1 inline-flex items-center gap-2"><i class="fa-solid fa-location-dot text-xs text-[var(--color-accent)]" aria-hidden="true"></i>{{ $addressValue }}</p>
                 </div>
+
+                @if($mapEmbedUrl)
+                    <div class="pt-2">
+                        <div class="contact-map-frame">
+                            <iframe
+                                src="{{ $mapEmbedUrl }}"
+                                title="Studio location map"
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"
+                                allowfullscreen
+                            ></iframe>
+                        </div>
+
+                        @if($mapOpenUrl)
+                            <a href="{{ $mapOpenUrl }}" target="_blank" rel="noopener noreferrer" class="contact-map-link">
+                                Open in Google Maps
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]" aria-hidden="true"></i>
+                            </a>
+                        @endif
+                    </div>
+                @endif
             </div>
         </aside>
     </section>

@@ -26,6 +26,7 @@
             if (count($heroSlides) === 4) {
                 break;
             }
+
         }
 
         foreach ($galleryImages as $image) {
@@ -37,6 +38,7 @@
                 'image' => $image,
                 'title' => 'Design and Build Showcase',
             ];
+
         }
     @endphp
 
@@ -79,10 +81,10 @@
         </div>
 
         <div class="site-shell relative z-10 flex min-h-[80svh] items-end py-14 md:min-h-[88svh] md:py-24">
-            <div class="max-w-3xl pb-6 md:pb-10" data-reveal>
-                <span class="hero-kicker">{{ $home['hero_kicker'] ?? 'Aanoukya Avenues' }}</span>
+            <div class="max-w-3xl pb-6 md:pb-10" data-page-stagger-group>
+                <span class="hero-kicker" data-page-stagger-item data-page-stagger-delay="70">{{ $home['hero_kicker'] ?? 'Aanoukya Avenues' }}</span>
 
-                <h1 class="section-title mt-6 max-w-3xl text-4xl leading-[1.08] md:text-5xl lg:text-6xl">
+                <h1 class="hero-stagger-text section-title mt-6 max-w-3xl text-4xl leading-[1.08] md:text-5xl lg:text-6xl" data-page-stagger-item data-page-stagger-delay="150">
                     <span class="headline-reveal"><span>{{ $home['hero_title_line_1'] ?? "We're the Twist your Plot needs." }}</span></span>
                     <br>
                     <span class="headline-reveal delay"><span class="headline-gradient">{{ $home['hero_title_line_2'] ?? "Bengaluru's End-to-End" }}</span></span>
@@ -90,11 +92,11 @@
                     <span class="headline-reveal delay-2"><span class="text-white">{{ $home['hero_title_line_3'] ?? 'Design + Build Studio.' }}</span></span>
                 </h1>
 
-                <p class="mt-6 max-w-2xl text-slate-300">
+                <p class="mt-6 max-w-2xl text-slate-300" data-page-stagger-item data-page-stagger-delay="250">
                     {{ $home['hero_description'] ?? 'We design, build and deliver complete homes and commercial spaces from the first sketch to the final finish. One team. Zero chaos.' }}
                 </p>
 
-                <div class="mt-8 flex flex-wrap gap-4">
+                <div class="mt-8 flex flex-wrap gap-4" data-page-stagger-item data-page-stagger-delay="340">
                     <a href="{{ route('contact.index') }}" class="btn-primary">{{ $home['hero_primary_cta'] ?? 'Get Started Now' }}</a>
                     <a href="{{ route('projects.index') }}" class="btn-secondary inline-flex items-center gap-2">{{ $home['hero_secondary_cta'] ?? 'Scroll down to see projects' }} <i class="fa-solid fa-arrow-down text-xs" aria-hidden="true"></i></a>
                 </div>
@@ -121,7 +123,7 @@
             </div>
         </div>
 
-        <div class="loop-gallery-mask">
+        <div class="loop-gallery-mask showcase-gallery-large">
             <div class="loop-gallery-track">
                 @foreach($galleryImages as $image)
                     <article class="{{ $loop->odd ? 'gallery-card-pill' : 'gallery-card-wide' }}"><img src="{{ $image }}" alt="Past work image"></article>
@@ -139,7 +141,7 @@
             </div>
         </div>
 
-        <div class="loop-gallery-mask mt-2">
+        <div class="loop-gallery-mask showcase-gallery-large mt-3">
             <div class="loop-gallery-track reverse">
                 @foreach($featuredProjects as $project)
                     <article class="{{ $loop->odd ? 'gallery-card-wide' : 'gallery-card-pill' }}"><img src="{{ $project->cover_image }}" alt="{{ $project->title }}"></article>
@@ -228,27 +230,52 @@
                 <p class="text-sm uppercase tracking-[0.16em] text-slate-400">{{ $home['testimonials_caption'] ?? 'Trusted by homeowners and brands' }}</p>
             </div>
 
-            <div class="mt-8 grid gap-5 lg:grid-cols-3">
+            <div class="mt-8 grid items-stretch gap-5 lg:grid-cols-3">
                 @foreach($testimonials as $testimonial)
-                    <article class="rounded-3xl border border-white/10 bg-[#0a1322] p-6 transition hover:border-[var(--color-accent)]/45 hover:shadow-[0_22px_45px_rgba(0,0,0,0.35)]">
-                        <div class="mb-5 flex items-center gap-1 text-[var(--color-accent)]">
-                            @for($i = 1; $i <= 5; $i++)
-                                @if($i <= $testimonial->rating)
-                                    <i class="fa-solid fa-star text-sm" aria-hidden="true"></i>
-                                @else
-                                    <i class="fa-regular fa-star text-sm text-slate-500" aria-hidden="true"></i>
-                                @endif
-                            @endfor
+                    @php
+                        $nameParts = preg_split('/\s+/', trim($testimonial->client_name ?? '')) ?: [];
+                        $initials = '';
+
+                        foreach (array_slice(array_filter($nameParts), 0, 2) as $part) {
+                            $initials .= strtoupper(substr($part, 0, 1));
+                        }
+
+                        if ($initials === '') {
+                            $initials = 'AA';
+                        }
+                    @endphp
+
+                    <article class="testimonial-card h-full {{ $loop->first ? 'testimonial-card-featured' : '' }}">
+                        <div class="testimonial-card-top">
+                            <span class="testimonial-quote-mark" aria-hidden="true">
+                                <i class="fa-solid fa-quote-right text-xs"></i>
+                            </span>
+
+                            <div class="testimonial-stars" aria-label="{{ $testimonial->rating }} out of 5 stars">
+                                @for($i = 1; $i <= 5; $i++)
+                                    @if($i <= $testimonial->rating)
+                                        <i class="fa-solid fa-star text-xs" aria-hidden="true"></i>
+                                    @else
+                                        <i class="fa-regular fa-star text-xs text-slate-500" aria-hidden="true"></i>
+                                    @endif
+                                @endfor
+                            </div>
                         </div>
-                        <p class="text-base leading-7 text-slate-200">"{{ $testimonial->quote }}"</p>
-                        <div class="mt-6 border-t border-white/10 pt-4">
-                            <p class="text-sm font-semibold uppercase tracking-[0.12em] text-white">{{ $testimonial->client_name }}</p>
-                            <p class="mt-1 text-xs uppercase tracking-[0.12em] text-slate-400">
-                                {{ $testimonial->client_title ?: 'Client' }}
+
+                        <p class="testimonial-quote">"{{ $testimonial->quote }}"</p>
+
+                        <div class="testimonial-client-row">
+                            <span class="testimonial-avatar">{{ $initials }}</span>
+
+                            <div class="testimonial-client-meta">
+                                <p class="testimonial-client-name">{{ $testimonial->client_name }}</p>
+                                <p class="testimonial-client-role">
+                                    {{ $testimonial->client_title ?: 'Client' }}
                                 @if($testimonial->company)
                                     / {{ $testimonial->company }}
                                 @endif
-                            </p>
+                                </p>
+                            </div>
                         </div>
                     </article>
                 @endforeach
